@@ -1,0 +1,257 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Greeter API."
+  version: "1.0.0"
+  title: "LewisU Greeter PET-API"
+  contact:
+    email: "omarisa@lewisu.edu"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+- name: "pets"
+  externalDocs:
+    description: "Find out more"
+    url: "http://lewisu.edu"
+- name: "store"
+  externalDocs:
+    description: "Find out more"
+    url: "http://lewisu.edu"
+schemes:
+- "https"
+- "http"
+paths:
+  /pet/findByStatus:
+    get:
+      tags:
+        - "pets"
+      summary: "Finds Pet"
+      description: ""
+      produces:
+        - application/json
+      parameters:
+        - name: status
+          in: query
+          description: ""
+          required: true
+          type: array
+          items:
+            type: string
+            enum:
+              - available
+              - pending
+              - sold
+            default: available
+          collectionFormat: csv
+      responses:
+        '200':
+          description: "successful response"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pet'
+        
+  
+  '/pet/{petId}':
+    get:
+      tags:
+        - "pets"
+      summary: "Find pet by petId"
+      description: ""
+      produces: 
+        - application/json
+      parameters:
+        - name: petId
+          in: path
+          description: ""
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: "successful response"
+          schema:
+            $ref: '#/definitions/Pet'
+        
+    
+  /store/inventory:
+    get:
+      tags:
+        - "store"
+      summary: "Returns pet"
+      description: ""
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: "successful response"
+          schema:
+            type: object
+            additionalProperties:
+              type: integer
+              example: "1"
+              
+  /store/order:
+    post:
+      tags:
+        - "store"
+      summary: "Pets Order"
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: true
+          schema:
+            $ref: '#/definitions/Order'
+      responses:
+        '200':
+          description: "Successful response"
+          schema:
+            $ref: '#/definitions/Order'
+        
+  
+definitions:
+  Order:
+    title: Pet Order
+    description: "Pet Orders"
+    type: object
+    properties:
+      id:
+        type: integer
+        example: "123"
+      petId:
+        type: integer
+        example: "123"
+      quantity:
+        type: integer
+        example: "123"
+      shipDate:
+        type: string
+        format: date-time
+      price:
+        type: integer
+        example: "250"
+      remaining:
+        type: integer
+        example: "150"
+      status:
+        type: string
+        description: Order Status
+        enum:
+          - placed
+          - approved
+          - delivered
+      complete:
+        type: boolean
+        
+    xml:
+      name: "Order"
+    example:
+      petId: 15 
+      quantity: 14
+      id: 0
+      shipDate: "2000-01-23T04:56:07.000+00:00"
+      price: 250
+      remaining: 150
+      complete: true
+      status: "placed"
+      
+  Inventory:
+    title: Pet category
+    description: "pet category"
+    type: object
+    properties:
+      id:
+        type: integer
+        example: "123"
+      name:
+        type: string
+        example: "doggie"
+    
+  Pet:
+    title:  Pet
+    description: "pet sales"
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+        example: "123"
+      Inventory:
+        $ref: '#/definitions/Inventory'
+      name:
+        type: "string"
+        example: "doggie"
+      photoUrls:
+        type: "array"
+        xml:
+          wrapped: true
+        items:
+          type: "string"
+          xml:
+            name: "photoUrl"
+      tags:
+        type: "array"
+        xml:
+          wrapped: true
+        items:
+          xml:
+            name: "tag"
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "pet status in the store"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+    xml:
+      name: "Pet"
+    example:
+      photoUrls:
+      - "photoUrls"
+      - "photoUrls"
+      name: "doggie"
+      id: 0
+      category:
+        name: "name"
+        id: 15
+      tags:
+      - name: "name"
+        id: 17
+      - name: "name"
+        id: 17
+      status: "available"
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+    example:
+      name: "name"
+      id: 17
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+    example:
+      name: "name"
+      id: 15
